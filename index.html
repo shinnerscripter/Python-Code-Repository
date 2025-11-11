@@ -25,12 +25,15 @@
             --error: #f44336;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             background-color: var(--deep-blue);
             color: var(--text-light);
             overflow-x: hidden;
             position: relative;
-            min-height: 100vh;
         }
 
         /* Efeito de partículas no fundo */
@@ -68,9 +71,15 @@
             position: fixed;
             width: 100%;
             z-index: 1000;
-            background-color: rgba(10, 25, 47, 0.9);
+            background-color: rgba(10, 25, 47, 0.95);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(100, 255, 218, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        header.scrolled {
+            padding: 15px 0;
+            background-color: rgba(10, 25, 47, 0.98);
         }
 
         nav {
@@ -130,23 +139,24 @@
             width: 100%;
         }
 
+        .nav-links a.active {
+            color: var(--light-blue);
+        }
+
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
         /* Seções principais */
         section {
             padding: 100px 0;
             min-height: 100vh;
-            display: none;
-        }
-
-        section.active {
-            display: block;
+            display: flex;
+            align-items: center;
         }
 
         /* Hero Section */
         .hero {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
             text-align: center;
             position: relative;
         }
@@ -157,6 +167,7 @@
             border-radius: 20px;
             padding: 40px;
             max-width: 800px;
+            margin: 0 auto;
             border: 1px solid rgba(100, 255, 218, 0.2);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
@@ -517,6 +528,53 @@
             font-size: 0.9rem;
         }
 
+        /* Indicador de seção ativa */
+        .section-indicator {
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+        }
+
+        .section-dot {
+            display: block;
+            width: 12px;
+            height: 12px;
+            margin: 15px 0;
+            border-radius: 50%;
+            background-color: var(--text-dark);
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .section-dot.active {
+            background-color: var(--light-blue);
+            transform: scale(1.3);
+        }
+
+        .section-dot::after {
+            content: attr(data-section);
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--ocean-blue);
+            color: var(--light-blue);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .section-dot:hover::after {
+            opacity: 1;
+        }
+
         /* Responsividade */
         @media (max-width: 768px) {
             .nav-links {
@@ -543,6 +601,14 @@
             .skills-grid {
                 grid-template-columns: 1fr;
             }
+
+            .section-indicator {
+                display: none;
+            }
+
+            section {
+                padding: 80px 0;
+            }
         }
     </style>
 </head>
@@ -554,7 +620,7 @@
     <div id="particles-js"></div>
 
     <!-- Header -->
-    <header>
+    <header id="header">
         <div class="container">
             <nav>
                 <a href="#" class="logo">
@@ -562,150 +628,179 @@
                     Gabriel Machado
                 </a>
                 <ul class="nav-links">
-                    <li><a href="#" data-section="home">Início</a></li>
-                    <li><a href="#" data-section="about">Sobre</a></li>
-                    <li><a href="#" data-section="installation">Instalação</a></li>
-                    <li><a href="#" data-section="codes">Códigos</a></li>
+                    <li><a href="#home" class="nav-link active">Início</a></li>
+                    <li><a href="#about" class="nav-link">Sobre</a></li>
+                    <li><a href="#installation" class="nav-link">Instalação</a></li>
+                    <li><a href="#codes" class="nav-link">Códigos</a></li>
+                    <li><a href="#contact" class="nav-link">Contato</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
-    <!-- Seções -->
-    <section id="home" class="active">
-        <div class="container hero">
-            <div class="profile-card">
-                <div class="profile-header">
-                    <div class="profile-avatar">GM</div>
-                    <div class="profile-info">
-                        <h1>Gabriel Machado</h1>
-                        <h2>Python Developer & AI Enthusiast</h2>
-                        <p>Desenvolvedor Python apaixonado por criar soluções inteligentes com ajuda de IA. 
-                           Este é meu repositório pessoal de códigos e projetos desenvolvidos para compartilhar 
-                           conhecimento com a comunidade.</p>
-                        <a href="#" class="btn btn-primary" data-section="codes">Ver Códigos</a>
+    <!-- Indicador de seções -->
+    <div class="section-indicator">
+        <a href="#home" class="section-dot active" data-section="Início"></a>
+        <a href="#about" class="section-dot" data-section="Sobre"></a>
+        <a href="#installation" class="section-dot" data-section="Instalação"></a>
+        <a href="#codes" class="section-dot" data-section="Códigos"></a>
+        <a href="#contact" class="section-dot" data-section="Contato"></a>
+    </div>
+
+    <!-- Seções em rolagem única -->
+    <main>
+        <!-- Home Section -->
+        <section id="home">
+            <div class="container hero">
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <div class="profile-avatar">GM</div>
+                        <div class="profile-info">
+                            <h1>Gabriel Machado</h1>
+                            <h2>Python Developer & AI Enthusiast</h2>
+                            <p>Desenvolvedor Python apaixonado por criar soluções inteligentes com ajuda de IA. 
+                               Este é meu repositório pessoal de códigos e projetos desenvolvidos para compartilhar 
+                               conhecimento com a comunidade.</p>
+                            <a href="#codes" class="btn btn-primary">Ver Códigos</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="about">
-        <div class="container">
-            <div class="about-content">
-                <div class="about-text">
-                    <h2>Sobre Mim</h2>
-                    <p>Sou um desenvolvedor Python com foco em automação, análise de dados e soluções com inteligência artificial. Utilizo ferramentas modernas e técnicas de IA para criar códigos eficientes e bem estruturados.</p>
-                    <p>Este blog reúne meus melhores projetos e códigos Python, todos disponíveis para download e uso livre pela comunidade. Acredito no poder do código aberto e no compartilhamento de conhecimento.</p>
-                    <p>Meu objetivo é ajudar outros desenvolvedores a aprender Python através de exemplos práticos e funcionais que podem ser aplicados em projetos reais.</p>
-                </div>
-                <div class="skills-grid">
-                    <div class="skill-category">
-                        <h3>Linguagens & Ferramentas</h3>
-                        <ul class="skill-list">
-                            <li>Python</li>
-                            <li>JavaScript</li>
-                            <li>HTML/CSS</li>
-                            <li>SQL</li>
-                            <li>Git</li>
-                        </ul>
+        <!-- About Section -->
+        <section id="about">
+            <div class="container">
+                <div class="about-content">
+                    <div class="about-text">
+                        <h2>Sobre Mim</h2>
+                        <p>Sou um desenvolvedor Python com foco em automação, análise de dados e soluções com inteligência artificial. Utilizo ferramentas modernas e técnicas de IA para criar códigos eficientes e bem estruturados.</p>
+                        <p>Este blog reúne meus melhores projetos e códigos Python, todos disponíveis para download e uso livre pela comunidade. Acredito no poder do código aberto e no compartilhamento de conhecimento.</p>
+                        <p>Meu objetivo é ajudar outros desenvolvedores a aprender Python através de exemplos práticos e funcionais que podem ser aplicados em projetos reais.</p>
                     </div>
-                    <div class="skill-category">
-                        <h3>Ferramentas de IA</h3>
-                        <ul class="skill-list">
-                            <li>ChatGPT</li>
-                            <li>GitHub Copilot</li>
-                            <li>OpenAI API</li>
-                            <li>TensorFlow</li>
-                            <li>Scikit-learn</li>
-                        </ul>
+                    <div class="skills-grid">
+                        <div class="skill-category">
+                            <h3>Linguagens & Ferramentas</h3>
+                            <ul class="skill-list">
+                                <li>Python</li>
+                                <li>JavaScript</li>
+                                <li>HTML/CSS</li>
+                                <li>SQL</li>
+                                <li>Git</li>
+                            </ul>
+                        </div>
+                        <div class="skill-category">
+                            <h3>Ferramentas de IA</h3>
+                            <ul class="skill-list">
+                                <li>ChatGPT</li>
+                                <li>GitHub Copilot</li>
+                                <li>OpenAI API</li>
+                                <li>TensorFlow</li>
+                                <li>Scikit-learn</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="installation">
-        <div class="container">
-            <h2>Como Instalar Python e VS Code</h2>
-            <p>Siga este passo a passo para configurar seu ambiente de desenvolvimento Python e executar os códigos deste blog.</p>
-            
-            <div class="installation-steps">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <h3>Baixar Python</h3>
-                    <p>Acesse o site oficial do Python e baixe a versão mais recente para seu sistema operacional.</p>
-                    <a href="https://www.python.org/downloads/" class="btn" target="_blank">Site do Python</a>
-                </div>
+        <!-- Installation Section -->
+        <section id="installation">
+            <div class="container">
+                <h2 style="text-align: center; color: var(--light-blue); margin-bottom: 20px;">Como Instalar Python e VS Code</h2>
+                <p style="text-align: center; color: var(--text-dark); margin-bottom: 50px;">Siga este passo a passo para configurar seu ambiente de desenvolvimento Python e executar os códigos deste blog.</p>
                 
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <h3>Instalar Python</h3>
-                    <p>Execute o instalador e marque a opção "Add Python to PATH" antes de instalar. Isso permite executar Python pelo terminal.</p>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <h3>Baixar VS Code</h3>
-                    <p>Baixe o Visual Studio Code, um editor de código leve e poderoso com excelente suporte para Python.</p>
-                    <a href="https://code.visualstudio.com/download" class="btn" target="_blank">Site do VS Code</a>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">4</div>
-                    <h3>Instalar Extensão Python</h3>
-                    <p>No VS Code, instale a extensão Python para obter recursos como autocompletar, debugging e linting.</p>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">5</div>
-                    <h3>Testar Instalação</h3>
-                    <p>Abra o terminal e digite <code>python --version</code> para verificar se o Python foi instalado corretamente.</p>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">6</div>
-                    <h3>Executar Códigos</h3>
-                    <p>Baixe os códigos deste blog e execute-os no VS Code ou no terminal usando <code>python arquivo.py</code>.</p>
+                <div class="installation-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h3>Baixar Python</h3>
+                        <p>Acesse o site oficial do Python e baixe a versão mais recente para seu sistema operacional.</p>
+                        <a href="https://www.python.org/downloads/" class="btn" target="_blank">Site do Python</a>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h3>Instalar Python</h3>
+                        <p>Execute o instalador e marque a opção "Add Python to PATH" antes de instalar. Isso permite executar Python pelo terminal.</p>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h3>Baixar VS Code</h3>
+                        <p>Baixe o Visual Studio Code, um editor de código leve e poderoso com excelente suporte para Python.</p>
+                        <a href="https://code.visualstudio.com/download" class="btn" target="_blank">Site do VS Code</a>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <h3>Instalar Extensão Python</h3>
+                        <p>No VS Code, instale a extensão Python para obter recursos como autocompletar, debugging e linting.</p>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <h3>Testar Instalação</h3>
+                        <p>Abra o terminal e digite <code>python --version</code> para verificar se o Python foi instalado corretamente.</p>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">6</div>
+                        <h3>Executar Códigos</h3>
+                        <p>Baixe os códigos deste blog e execute-os no VS Code ou no terminal usando <code>python arquivo.py</code>.</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="codes">
-        <div class="container">
-            <h2>Meus Códigos Python</h2>
-            <p>Explore minha coleção de códigos Python úteis para diversos propósitos. Todos estão disponíveis para download e uso livre.</p>
-            
-            <div class="code-feed" id="code-feed">
-                <!-- As postagens serão carregadas aqui via JavaScript -->
+        <!-- Codes Section -->
+        <section id="codes">
+            <div class="container">
+                <h2 style="text-align: center; color: var(--light-blue); margin-bottom: 20px;">Meus Códigos Python</h2>
+                <p style="text-align: center; color: var(--text-dark); margin-bottom: 50px;">Explore minha coleção de códigos Python úteis para diversos propósitos. Todos estão disponíveis para download e uso livre.</p>
+                
+                <div class="code-feed" id="code-feed">
+                    <!-- As postagens serão carregadas aqui via JavaScript -->
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact">
+            <div class="container">
+                <h2 style="text-align: center; color: var(--light-blue); margin-bottom: 50px;">Entre em Contato</h2>
+                <div style="text-align: center;">
+                    <p style="color: var(--text-dark); margin-bottom: 30px; font-size: 1.1rem;">
+                        Tem alguma dúvida sobre os códigos ou quer colaborar em algum projeto?<br>
+                        Entre em contato através das minhas redes sociais!
+                    </p>
+                    <div class="social-links">
+                        <a href="https://www.linkedin.com/in/gabriel-machado-2b1786302/" class="social-link" target="_blank">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://www.instagram.com/gabriel_mds13?igsh=MWNjZGFtc3E5cTZweA==" class="social-link" target="_blank">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://github.com/shinnerscripter/" class="social-link" target="_blank">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://wa.me/5544984165361" class="social-link" target="_blank">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <!-- Footer -->
     <footer>
         <div class="container">
-            <div class="social-links">
-                <a href="https://www.linkedin.com/in/gabriel-machado-2b1786302/" class="social-link" target="_blank">
-                    <i class="fab fa-linkedin-in"></i>
-                </a>
-                <a href="https://www.instagram.com/gabriel_mds13?igsh=MWNjZGFtc3E5cTZweA==" class="social-link" target="_blank">
-                    <i class="fab fa-instagram"></i>
-                </a>
-                <a href="https://github.com/shinnerscripter/" class="social-link" target="_blank">
-                    <i class="fab fa-github"></i>
-                </a>
-                <a href="https://wa.me/5544984165361" class="social-link" target="_blank">
-                    <i class="fab fa-whatsapp"></i>
-                </a>
-            </div>
             <p class="copyright">© 2023 Gabriel Machado - Python Developer. Todos os códigos são de uso livre.</p>
         </div>
     </footer>
 
     <script>
-        // Dados das postagens - Compatível com o editor Python
+        // Dados das postagens
         let posts = [
   {
     "id": 1,
@@ -720,23 +815,9 @@
 
         // Elementos DOM
         const codeFeed = document.getElementById('code-feed');
-        const navLinks = document.querySelectorAll('.nav-links a');
-
-        // Navegação entre seções
-        navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const sectionId = link.getAttribute('data-section');
-                
-                // Esconder todas as seções
-                document.querySelectorAll('section').forEach(section => {
-                    section.classList.remove('active');
-                });
-                
-                // Mostrar a seção selecionada
-                document.getElementById(sectionId).classList.add('active');
-            });
-        });
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sectionDots = document.querySelectorAll('.section-dot');
+        const header = document.getElementById('header');
 
         // Carregar postagens
         function loadPosts() {
@@ -793,6 +874,75 @@
             return postDiv;
         }
 
+        // Navegação suave
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                
+                if (targetSection) {
+                    targetSection.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Navegação pelos dots
+        sectionDots.forEach(dot => {
+            dot.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = dot.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                
+                if (targetSection) {
+                    targetSection.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Atualizar navegação ativa durante a rolagem
+        function updateActiveSection() {
+            const sections = document.querySelectorAll('section');
+            const scrollPos = window.scrollY + 100;
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+                const sectionId = section.getAttribute('id');
+
+                if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+                    // Atualizar links de navegação
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${sectionId}`) {
+                            link.classList.add('active');
+                        }
+                    });
+
+                    // Atualizar dots de navegação
+                    sectionDots.forEach(dot => {
+                        dot.classList.remove('active');
+                        if (dot.getAttribute('href') === `#${sectionId}`) {
+                            dot.classList.add('active');
+                        }
+                    });
+                }
+            });
+
+            // Atualizar header
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        }
+
         // Inicializar
         document.addEventListener('DOMContentLoaded', () => {
             loadPosts();
@@ -814,6 +964,10 @@
                 `;
             }, 100);
         });
+
+        // Event listeners
+        window.addEventListener('scroll', updateActiveSection);
+        window.addEventListener('load', updateActiveSection);
     </script>
 </body>
 </html>
